@@ -38,10 +38,10 @@ Baserow base tables
 
 ```sh
 # using npm
-npm install --save gatsby-source-airtable
+npm install --save gatsby-source-baserow
 
 # using yarn
-yarn add gatsby-source-airtable
+yarn add gatsby-source-baserow
 ```
 
 ## Example
