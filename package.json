@@ -1,20 +1,20 @@
 {
-  "name": "gatsby-source-airtable",
-  "description": "Gatsby Airtable Source with Linked Nodes, Multiple Tables and File Nodes.",
-  "version": "2.2.0",
-  "repository": "git@github.com:jbolda/gatsby-source-airtable.git",
-  "author": "Jacob Bolda <me@jacobbolda.com>",
+  "name": "gatsby-source-baserow",
+  "description": "Gatsby Baserow Source with Linked Nodes, Multiple Tables and File Nodes.",
+  "version": "0.0.1",
+  "repository": "git@github.com:jibe-b/gatsby-source-baserow.git",
+  "author": "jibe-b <user701@orange.fr>",
   "license": "MIT",
   "main": "index.js",
   "files": [
     "/gatsby-node.js"
   ],
   "keywords": [
-    "airtable",
+    "baserow",
     "gatsby",
     "gatsby-plugin",
     "gatsby-source",
-    "gatsby-source-airtable"
+    "gatsby-source-baserow"
   ],
   "scripts": {
     "c": "all-contributors",
@@ -24,7 +24,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "airtable": "^0.11.1",
     "bluebird": "^3.5.4",
     "mime": "^2.4.4"
   },
