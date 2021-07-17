@@ -1,15 +1,17 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <div align="center">
 
-[![gatsby-source-airtable](./header.png)](.)
+[![gatsby-source-baserow](./header.png)](.)
 
-# gatsby-source-airtable
+# gatsby-source-baserow
+  
+  Forked from the [Gatsby Airtable connector](https://github.com/jbolda/gatsby-source-airtable/) by [jbolda](https://github.com/jbolda/). Only minor changes were applied, most of the work comes from the original plugin.
 
 Gatsby source plugin for sourcing data into your Gatsby application from your
-Airtable base tables
+Baserow base tables
 
-[![npm](https://badgen.net/npm/v/gatsby-source-airtable)](https://www.npmjs.com/package/gatsby-source-airtable)
-[![travis](https://badgen.net/travis/jbolda/gatsby-source-airtable)](https://travis-ci.com/jbolda/gatsby-source-airtable)
+[![npm](https://badgen.net/npm/v/gatsby-source-baserow)](https://www.npmjs.com/package/gatsby-source-baserow)
+[![travis](https://badgen.net/travis/jibe-b/gatsby-source-baserow)](https://travis-ci.com/jbolda/gatsby-source-baserow)
 
 </div>
 
@@ -50,23 +52,23 @@ Getting data from two different tables:
 // In gatsby-config.js
 plugins: [
   {
-    resolve: `gatsby-source-airtable`,
+    resolve: `gatsby-source-baserow`,
     options: {
       apiKey: `YOUR_AIRTABLE_KEY`, // may instead specify via env, see below
       concurrency: 5, // default, see using markdown and attachments for more information
       tables: [
         {
-          baseId: `YOUR_AIRTABLE_BASE_ID`,
+          baseId: `YOUR_BASEROW_BASE_ID`,
           tableName: `YOUR_TABLE_NAME`,
           tableView: `YOUR_TABLE_VIEW_NAME`, // optional
-          queryName: `OPTIONAL_NAME_TO_IDENTIFY_TABLE`, // optionally default is false - makes all records in this table a separate node type, based on your tableView, or if not present, tableName, e.g. a table called "Fruit" would become "allAirtableFruit". Useful when pulling many airtables with similar structures or fields that have different types. See https://github.com/jbolda/gatsby-source-airtable/pull/52.
+          queryName: `OPTIONAL_NAME_TO_IDENTIFY_TABLE`, // optionally default is false - makes all records in this table a separate node type, based on your tableView, or if not present, tableName, e.g. a table called "Fruit" would become "allBaserowFruit". Useful when pulling many airtables with similar structures or fields that have different types. See https://github.com/jbolda/gatsby-source-baserow/pull/52.
           mapping: { `CASE_SENSITIVE_COLUMN_NAME`: `VALUE_FORMAT` }, // optional, e.g. "text/markdown", "fileNode"
           tableLinks: [`CASE`, `SENSITIVE`, `COLUMN`, `NAMES`], // optional, for deep linking to records across tables.
           separateNodeType: false, // boolean, default is false, see the documentation on naming conflicts for more information
           separateMapType: false, // boolean, default is false, see the documentation on using markdown and attachments for more information
         },
         {
-          baseId: `YOUR_AIRTABLE_BASE_ID`,
+          baseId: `YOURBASEROW_BASE_ID`,
           tableName: `YOUR_TABLE_NAME`,
           tableView: `YOUR_TABLE_VIEW_NAME` // optional
           // can leave off queryName, mapping or tableLinks if not needed
@@ -102,7 +104,7 @@ Get all records from `YOUR_TABLE_NAME` where `Field_1 === YOUR_VALUE`:
 
 ```graphql
 {
-  allAirtable(
+  allBaserow(
     filter: {
       table: { eq: "YOUR_TABLE_NAME" }
       data: { Field_1: { eq: "YOUR_VALUE" } }
@@ -123,7 +125,7 @@ Get all records ordered according selected `tableView`:
 
 ```graphql
 {
-  allAirtable(sort: { fields: rowIndex }) {
+  allBaserow(sort: { fields: rowIndex }) {
     edges {
       node {
         data {
@@ -144,8 +146,8 @@ throughout your Gatsby app, and to other Gatsby plugins as well.
 As seen in the example above, `tables` is always specified as an array of table
 objects. These tables may be sourced from different bases.
 
-Querying for `airtable` will always only return one record (defaulting to the
-first record in the table), and querying for `allAirtable` will return any
+Querying for `baserow` will always only return one record (defaulting to the
+first record in the table), and querying for `allBaserow` will return any
 records that match your query parameters.
 
 As in the examples above, you can narrow your query by filtering for table
@@ -153,14 +155,14 @@ names, and field values.
 
 ### Deep linking across tables
 
-One powerful feature of Airtable is the ability to specify fields which link to
+One powerful feature of Baserow is the ability to specify fields which link to
 records in other tables-- the `Link to a Record` field type. If you wish to
 query data from a linked record, you must specify the field name in `tableLinks`
-(matching the name shown in Airtable, not the escaped version).
+(matching the name shown in Baserow, not the escaped version).
 
 This will create nested nodes accessible in your GraphQL queries, as shown in
 the above example. If you do not specify a linked field in `tableLinks`, you
-will just receive the linked record's Airtable IDs as `strings`. The name of the
+will just receive the linked record's Baserow IDs as `strings`. The name of the
 column/field does not have to match the related table, but you do need to make
 sure that the related table is included as an object in your `gatsby-config.js`
 as well.
@@ -173,14 +175,14 @@ particularly useful if you would like to have Gatsby pick up the fields for
 transforming, e.g. `text/markdown`. If you do not provide a mapping, Gatsby will
 just "infer" what type of value it is, which is most typically a `string`.
 
-For an example of a markdown-and-airtable-driven site using
+For an example of a markdown-and-baserow-driven site using
 `gatsby-transformer-remark`, see the examples folder in this repo.
 
-If you are using the `Attachment` type field in Airtable, you may specify a
+If you are using the `Attachment` type field in Baserow, you may specify a
 column name with `fileNode` and the plugin will bring in these files. Using this
 method, it will create "nodes" for each of the files and expose this to all of
 the transformer plugins. A good use case for this would be attaching images in
-Airtable, and being able to make these available for use with the `sharp`
+Baserow, and being able to make these available for use with the `sharp`
 plugins and `gatsby-image`. Specifying a `fileNode` does require a peer
 dependency of `gatsby-source-filesystem` otherwise it will fall back as a
 non-mapped field. The locally available files and any ecosystem connections will
@@ -192,8 +194,8 @@ that you may specify is `separateMapType` which will create a gatsby node type
 for each type of data. This should prevent issues with your data types clashing.
 
 When using the Attachment type field, this plugin governs requests to download
-the associated files from Airtable to 5 concurrent requests to prevent excessive
-requests on Airtable's servers - which can result in refused/hanging
+the associated files from Baserow to 5 concurrent requests to prevent excessive
+requests on Baserow's servers - which can result in refused/hanging
 connections. You can adjust this limit with the concurrency option in your
 `gatsby-config.js` file. Set the option with an integer value for your desired
 limit on attempted concurrent requests. A value of 0 will allow requests to be
@@ -201,32 +203,32 @@ made without any limit.
 
 ### The power of views
 
-Within Airtable, every table can have one or more named Views. These Views are a
+Within Baserow, every table can have one or more named Views. These Views are a
 convenient way to pre-filter and sort your data before querying it in Gatsby. If
 you do not specify a view in your table object, raw data will be returned in no
 particular order.
 
 For example, if you are creating a blog or documentation site, specify a
-`published` field in Airtable, create a filter showing only published posts, and
+`published` field in Baserow, create a filter showing only published posts, and
 specify this as the (optional) `tableView` option in `gatsby-config.js`
 
 ### Naming conflicts
 
 You may have a situation where you are including two separate bases, each with a
 table that has the exact same name. With the data structure of this repo, both
-bases would fall into allAirtable and you wouldn't be able to tell them apart
+bases would fall into allBaserow and you wouldn't be able to tell them apart
 when building GraphQL queries. This is what the optional `queryName` setting is
 for-- simply to provide an alternate name for a table.
 
 If you would like to have the query names for tables be different from the
-default `allAirtable` or `airtable`, you may specify `separateNodeType` as
+default `allBaserow` or `baserow`, you may specify `separateNodeType` as
 `true`.
 
 ### Column Names
 
 Within GraphQL (the language you query information from and that this plugin
 puts nodes into), there are character limitations. Most specifically we cannot
-have spaces in field names. We don't want to force you to change your Airtable
+have spaces in field names. We don't want to force you to change your Baserow
 names, so we will "clean" the keys and replace the spaces with an underscore
 (e.g. `The Column Name` becomes `The_Column_Name`). We use the cleaned name
 everywhere including `gatsby-config.js` and within your queries. We don't warn
@@ -245,12 +247,12 @@ would become
 
 as the period, the space and the parenthesis all become underscores. Although
 your graphql queries will work, you will see only nulls in this column. So
-please ensure the names of your fields in Airtable do not result in 3 sequential
+please ensure the names of your fields in Baserow do not result in 3 sequential
 underscores.
 
 ### API Keys
 
-Keys can be found in Airtable by clicking `Help > API Documentation`.
+Keys can be found in Baserow by clicking `Help > API Documentation`.
 
 The API key can be hard coded directly in `gatsby-config.js` as noted in the
 previous section-- **this exposes your key to anyone viewing your repository and
@@ -260,7 +262,7 @@ prevent it from being committed to source control**.
 We recommended specifying your API key using an
 [Environment Variable](https://www.gatsbyjs.org/docs/environment-variables/).
 You may also specify it in your command line such as
-`AIRTABLE_API_KEY=XXXXXX gatsby develop`. Note: If you use an environment
+`BASEROW_API_KEY=XXXXXX gatsby develop`. Note: If you use an environment
 variable prepended with `GATSBY_`, it takes advantage of some syntactic sugar
 courtesy of Gatsby, which automatically makes it available - but any references
 to environment variables like this that are rendered client-side will
@@ -275,19 +277,19 @@ key.
 // In gatsby-config.js
 plugins: [
   {
-    resolve: `gatsby-source-airtable`,
+    resolve: `gatsby-source-baserow`,
     options: {
       // not prefaced with "GATSBY_", will not automatically be included client-side unless you explicitly expose it
-      apiKey: process.env.AIRTABLE_API_KEY,
+      apiKey: process.env.BASEROW_API_KEY,
       // ...etc
     },
   },
 ];
 ```
 
-You can either use a node tool like "dotenv" to load secrets like your Airtable
+You can either use a node tool like "dotenv" to load secrets like your Baserow
 API key from a .env file, or you can specify it in your command line such as
-`AIRTABLE_API_KEY=XXXXXX gatsby develop`.
+`BASEROW_API_KEY=XXXXXX gatsby develop`.
 
 If you add or change your API key in an environment variable at the system
 level, you may need to reload your code editor/IDE for that variable to reload.
@@ -295,8 +297,8 @@ level, you may need to reload your code editor/IDE for that variable to reload.
 ### Columns without any values (yet)
 
 If you want to perform conditional logic based on data that may or may not be
-present in Airtable, but you do not yet have tabular data for the "may" case,
-you can update the `gatsby-source-airtable` section of `gatsby-config.js` to
+present in Baserow, but you do not yet have tabular data for the "may" case,
+you can update the `gatsby-source-baserow` section of `gatsby-config.js` to
 include sensible defaults for those fields so that they will be returned via
 your GraphQL calls:
 
@@ -304,13 +306,13 @@ your GraphQL calls:
 // In gatsby-config.js
 plugins: [
   {
-    resolve: `gatsby-source-airtable`,
+    resolve: `gatsby-source-baserow`,
     options: {
-      apiKey: process.env.AIRTABLE_API_KEY,
+      apiKey: process.env.BASEROW_API_KEY,
       tables: [
         {
-          baseId: process.env.AIRTABLE_BASE,
-          tableName: process.env.AIRTABLE_TABLE_NAME,
+          baseId: process.env.BASEROW_BASE,
+          tableName: process.env.BASEROW_TABLE_NAME,
           defaultValues: {
             // currently does not accept null / undefined. use empty string instead
             // and perform your conditional logic on name_of_field.length > 0 ? condition_1 : condition_2
@@ -380,4 +382,5 @@ specification. Contributions of any kind welcome!
 
 ## License
 
-[MIT License, Copyright (c) 2018 Jacob Bolda](./LICENSE)
+Original work: [MIT License, Copyright (c) 2018 Jacob Bolda](./LICENSE)
+Adaptations to Baserow: still MIT indeed, by jibe-b
